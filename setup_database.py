@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Modelagem e População Inicial do Banco de Dados Relacional SQLite (portal_ensino.db)
-Portal de Ensino — Prof. Jerônimo Silva (SENAC)
+Portal de Ensino — Prof. Jeronimo Silva
 """
 
 import os
@@ -32,11 +32,11 @@ def build_database():
     );
     """)
 
-    # 2. Tabela de Turmas (ex.: Excel 407, Programador 1082, Inglês 573)
+    # 2. Tabela de Turmas (ex.: Excel 407)
     cur.execute("""
     CREATE TABLE turmas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        codigo_senac TEXT NOT NULL UNIQUE,
+        codigo TEXT NOT NULL UNIQUE,
         slug TEXT NOT NULL UNIQUE,
         modalidade_id INTEGER NOT NULL,
         nome TEXT NOT NULL,
@@ -123,11 +123,15 @@ def build_database():
     # =========================================================================
     modalidades_data = [
         (1, "excel", "Excel & Produtividade", "📊",
-         "Domine planilhas do zero ao avançado: formatação profissional, funções lógicas (SE), auditoria de fórmulas e automação.", 1),
-        (2, "programacao", "Programação & Sistemas", "💻",
-         "Lógica de programação, algoritmos em Python, bancos de dados SQL e desenvolvimento de sistemas passo a passo.", 2),
-        (3, "ingles", "Inglês Técnico & Conversação", "🌎",
-         "Vocabulário aplicado à tecnologia e carreira, leitura instrumental e estruturas práticas para o dia a dia.", 3),
+         "Domine planilhas do zero ao avançado: formatação profissional, modelagem lógica, auditoria de fórmulas e automação prática.", 1),
+        (2, "python", "Programação em Python", "🐍",
+         "Lógica de programação, automação de rotinas, manipulação de dados e desenvolvimento de scripts inteligentes.", 2),
+        (3, "java", "Desenvolvimento Java", "☕",
+         "Programação orientada a objetos, arquitetura de sistemas corporativos e fundamentos sólidos de back-end.", 3),
+        (4, "ingles-iniciante", "Inglês Iniciante", "📘",
+         "Fundamentos da comunicação, vocabulário essencial e estruturas para leitura e interação no dia a dia.", 4),
+        (5, "ingles-conversacao", "Inglês para Conversação", "💬",
+         "Prática oral ativa, fluência para ambientes de trabalho e tecnologia, dinâmicas de conversação.", 5),
     ]
     cur.executemany(
         "INSERT INTO modalidades (id, slug, titulo, icone, descricao, ordem) VALUES (?, ?, ?, ?, ?, ?);",
@@ -135,12 +139,10 @@ def build_database():
     )
 
     turmas_data = [
-        (1, "407", "excel-407", 1, "Turma 407 — SENAC Aldeota", "SENAC Aldeota", "Em andamento", 1, 1),
-        (2, "1082", "prog-1082", 2, "Programador de Sistemas 1082", "SENAC", "Em breve", 0, 1),
-        (3, "573", "ingles-573", 3, "Inglês 573", "SENAC", "Em breve", 0, 1),
+        (1, "407", "excel-407", 1, "Turma 407", "Presencial", "Em andamento", 1, 1),
     ]
     cur.executemany(
-        "INSERT INTO turmas (id, codigo_senac, slug, modalidade_id, nome, unidade, tag_status, ativa, ordem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        "INSERT INTO turmas (id, codigo, slug, modalidade_id, nome, unidade, tag_status, ativa, ordem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
         turmas_data
     )
 

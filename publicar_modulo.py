@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Motor de Publicação Progressiva do Portal de Ensino (SQLite Relacional) — Prof. Jerônimo Silva
+Motor de Publicação Progressiva do Portal de Ensino (SQLite Relacional) — Prof. Jeronimo Silva
 Opera diretamente sobre o banco de dados SQLite `portal_ensino.db`.
 
 Exemplos de uso:
@@ -35,7 +35,7 @@ def set_module_state(codigo_turma: str, codigo_caderno: str, liberar: bool):
     cur = conn.cursor()
 
     turma = cur.execute(
-        "SELECT id, nome, codigo_senac FROM turmas WHERE codigo_senac = ?;",
+        "SELECT id, nome, codigo FROM turmas WHERE codigo = ?;",
         (codigo_turma,)
     ).fetchone()
     if not turma:
@@ -82,7 +82,7 @@ def set_module_state(codigo_turma: str, codigo_caderno: str, liberar: bool):
     conn.close()
 
     badge = "🟢 LIBERADO" if liberar else "🔒 BLOQUEADO"
-    print(f"[SQLITE] Turma {turma['codigo_senac']} ({turma['nome']}) -> Caderno {cod_cad} ({caderno['titulo']}) atualizado para {badge}!")
+    print(f"[SQLITE] Turma {turma['codigo']} ({turma['nome']}) -> Caderno {cod_cad} ({caderno['titulo']}) atualizado para {badge}!")
 
 
 def show_status(codigo_turma: str = "407"):
@@ -90,7 +90,7 @@ def show_status(codigo_turma: str = "407"):
     cur = conn.cursor()
 
     turma = cur.execute(
-        "SELECT id, codigo_senac, nome FROM turmas WHERE codigo_senac = ?;",
+        "SELECT id, codigo, nome FROM turmas WHERE codigo = ?;",
         (codigo_turma,)
     ).fetchone()
 
@@ -128,7 +128,7 @@ def git_publish(msg: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gerenciador SQLite de Liberação Progressiva do Portal")
     parser.add_argument("codigo_posicional", nargs="?", help="Atalho para liberar um caderno (ex.: python3 publicar_modulo.py 03 --push)")
-    parser.add_argument("--turma", type=str, default="407", help="Código da turma no SENAC (padrão: 407)")
+    parser.add_argument("--turma", type=str, default="407", help="Código da turma (padrão: 407)")
     parser.add_argument("--status", action="store_true", help="Exibe o status atual de cada caderno no SQLite")
     parser.add_argument("--liberar", type=str, help="Libera um caderno no SQLite (ex.: 03)")
     parser.add_argument("--bloquear", type=str, help="Bloqueia um caderno no SQLite (ex.: 03)")

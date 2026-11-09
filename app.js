@@ -1,12 +1,31 @@
 // ============================================================================
-// PORTAL DE ENSINO — PROF. JERÔNIMO SILVA (SENAC)
+// PORTAL DE ENSINO — PROF. JERONIMO SILVA
 // Arquitetura Front-End + Banco Relacional SQLite (portal_ensino.db via sql.js)
 // ============================================================================
 
 let db = null; // Instância ativa do banco SQLite (sql.js)
-let currentView = "home"; // 'home' | 'turma'
+let currentView = "home"; // 'home' | 'turma' | 'sobre'
 let activeTurmaSlug = "excel-407";
 let activeChapterId = "boas-vindas"; // 'boas-vindas' | 'atalhos' | slug do caderno
+let currentTheme = localStorage.getItem("portal_ensino_theme") || "light";
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem("portal_ensino_theme", theme);
+  if (theme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.body.classList.add("dark-theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.body.classList.remove("dark-theme");
+  }
+}
+
+function toggleTheme() {
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme);
+  renderApp();
+}
 
 // Utilitário para executar SELECT no SQLite retornando array de objetos [{col: val}, ...]
 function queryAll(sql, params = []) {
@@ -39,7 +58,7 @@ function getModalidadesComTurmas() {
 
   return modalidades.map(m => {
     const turmas = queryAll(`
-      SELECT id, codigo_senac, slug, nome, unidade, tag_status, ativa
+      SELECT id, codigo, slug, nome, unidade, tag_status, ativa
       FROM turmas
       WHERE modalidade_id = ?
       ORDER BY ordem ASC;
@@ -50,7 +69,7 @@ function getModalidadesComTurmas() {
 
 function getTurmaBySlug(slug) {
   return queryOne(`
-    SELECT t.id, t.codigo_senac, t.slug, t.nome, t.unidade, t.tag_status, t.ativa,
+    SELECT t.id, t.codigo, t.slug, t.nome, t.unidade, t.tag_status, t.ativa,
            m.id AS modalidade_id, m.titulo AS modalidade_titulo, m.icone AS modalidade_icone
     FROM turmas t
     INNER JOIN modalidades m ON t.modalidade_id = m.id
@@ -130,6 +149,12 @@ function goHome() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function openSobreView() {
+  currentView = "sobre";
+  renderApp();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function openChapter(chapterSlug) {
   activeChapterId = chapterSlug;
   renderApp();
@@ -137,69 +162,36 @@ function openChapter(chapterSlug) {
 }
 
 function renderTopbar() {
+  const isDark = currentTheme === "dark";
   return `
     <header class="topbar">
       <div class="brand" onclick="goHome()">
         <div class="brand-badge">JS</div>
         <div class="brand-title">
-          <h1>Portal de Ensino — Prof. Jerônimo Silva</h1>
+          <h1>Portal de Ensino — Prof. Jeronimo Silva</h1>
           <p>Repositório de Aulas, Planilhas Oficiais e Cadernos de Exercícios</p>
         </div>
       </div>
-      ${currentView === "turma" ? `
-        <button class="btn-back-home" onclick="goHome()">
-          ← Trocar de Turma / Início
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="toggleTheme()" title="Alternar tema claro/escuro">
+          ${isDark ? '☀️ Claro' : '🌙 Escuro'}
         </button>
-      ` : ""}
+        ${currentView !== "sobre" ? `
+          <button class="topbar-btn" onclick="openSobreView()" title="Conhecer perfil do professor">
+            👨‍🏫 Sobre o Professor
+          </button>
+        ` : ""}
+        ${currentView !== "home" ? `
+          <button class="btn-back-home" onclick="goHome()">
+            ← Início
+          </button>
+        ` : ""}
+      </div>
     </header>
   `;
 }
 
-// COMPONENTE: SEÇÃO SOBRE O PROFESSOR (BIOGRAFIA & REDES)
-function renderTeacherSection() {
-  return `
-    <section class="home-teacher-section">
-      <div class="teacher-card-main">
-        <div class="teacher-avatar-lg">JS</div>
-        <div class="teacher-content">
-          <span class="teacher-tag">Corpo Docente • SENAC</span>
-          <h3 class="teacher-name">Prof. Jerônimo Silva</h3>
-          <p class="teacher-headline">Instrutor de Tecnologia, Produtividade & IA</p>
-          <p class="teacher-bio">
-            Apaixonado por simplificar rotinas através de planilhas inteligentes, automação e raciocínio lógico. 
-            Criei este portal unificado para reunir todos os materiais oficiais, planilhas guiadas e glossários das nossas aulas, 
-            garantindo suporte contínuo durante e após o curso. Siga nas redes e conecte-se:
-          </p>
-          <div class="teacher-social-grid">
-            <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" class="social-btn linkedin">
-              <span class="social-icon">💼</span>
-              <span class="social-meta">
-                <strong>LinkedIn</strong>
-                <small>/in/jeronimo-jrsilva</small>
-              </span>
-            </a>
-            <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" class="social-btn github">
-              <span class="social-icon">🐙</span>
-              <span class="social-meta">
-                <strong>GitHub</strong>
-                <small>@jeronimo-jrsilva</small>
-              </span>
-            </a>
-            <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" class="social-btn instagram">
-              <span class="social-icon">📸</span>
-              <span class="social-meta">
-                <strong>Instagram</strong>
-                <small>@englishwithjeronimo</small>
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  `;
-}
-
-// TELA 1: RECEPÇÃO POR MODALIDADES E CÓDIGOS DE TURMA (LIDA DO SQLITE)
+// TELA 1: RECEPÇÃO POR MODALIDADES E CÓDIGOS DE TURMA
 function renderHomeView() {
   const areas = getModalidadesComTurmas();
 
@@ -209,34 +201,126 @@ function renderHomeView() {
       <div class="home-container">
         <div class="home-hero">
           <span class="home-hero-badge">Ambiente de Apoio ao Aluno</span>
-          <h2>Olá! Selecione a sua turma para começar</h2>
-          <p>Cada turma possui seu próprio caderno digital atualizado aula a aula com as planilhas oficiais e resumos práticos.</p>
+          <h2>Olá! Selecione a sua área de estudo</h2>
+          <p>Materiais de apoio, cadernos de exercícios e planilhas práticas para acelerar sua produtividade.</p>
         </div>
 
         <div class="areas-grid">
-          ${areas.map(area => `
-            <div class="area-card">
-              <div>
-                <span class="area-icon">${area.icone}</span>
-                <h3>${area.titulo}</h3>
-                <p>${area.descricao}</p>
-              </div>
-              <div>
-                <span class="turmas-group-label">Selecione sua turma:</span>
-                <div class="turmas-list">
-                  ${area.turmas.map(t => `
-                    <button class="btn-turma ${t.ativa ? 'active-turma' : 'secondary-turma'}" onclick="openTurma('${t.slug}')">
-                      <span>${t.nome}</span>
-                      <span>${t.ativa ? 'Entrar →' : t.tag_status}</span>
-                    </button>
-                  `).join("")}
+          ${areas.map(area => {
+            const hasTurmas = area.turmas && area.turmas.length > 0;
+            return `
+              <div class="area-card">
+                <div>
+                  <span class="area-icon">${area.icone}</span>
+                  <h3>${area.titulo}</h3>
+                  <p>${area.descricao}</p>
+                </div>
+                <div>
+                  ${hasTurmas ? `
+                    <span class="turmas-group-label">Turmas disponíveis:</span>
+                    <div class="turmas-list">
+                      ${area.turmas.map(t => `
+                        <button class="btn-turma active-turma" onclick="openTurma('${t.slug}')">
+                          <span>${t.nome}</span>
+                          <span>Entrar →</span>
+                        </button>
+                      `).join("")}
+                    </div>
+                  ` : `
+                    <div class="em-breve-container">
+                      <span class="badge-em-breve">Em breve</span>
+                    </div>
+                  `}
                 </div>
               </div>
-            </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
 
-        ${renderTeacherSection()}
+        <div class="home-discreet-footer">
+          Portal desenvolvido e mantido pelo <a href="javascript:void(0)" onclick="openSobreView()">Prof. Jeronimo Silva</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// TELA DEDICADA: SOBRE O PROFESSOR (COM FOTO OFICIAL & REDES)
+function renderSobreView() {
+  return `
+    ${renderTopbar()}
+    <div class="home-wrapper">
+      <div class="home-container">
+        <div class="sobre-profile-card">
+          <div class="sobre-profile-header">
+            <div class="profile-photo-wrapper">
+              <img src="assets/jeronimo_perfil.jpg" alt="Prof. Jeronimo Silva" class="profile-photo" />
+            </div>
+            <div class="profile-header-info">
+              <span class="teacher-tag">Um pouco sobre mim</span>
+              <h2>Prof. Jeronimo Silva</h2>
+              <p class="profile-role">Instrutor de Tecnologia & Produtividade</p>
+              
+              <div class="teacher-social-grid">
+                <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" class="social-btn linkedin">
+                  <span class="social-icon">💼</span>
+                  <span class="social-meta">
+                    <strong>LinkedIn</strong>
+                    <small>in/jeronimo-jrsilva</small>
+                  </span>
+                </a>
+                <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" class="social-btn github">
+                  <span class="social-icon">🐙</span>
+                  <span class="social-meta">
+                    <strong>GitHub</strong>
+                    <small>@jeronimo-jrsilva</small>
+                  </span>
+                </a>
+                <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" class="social-btn instagram">
+                  <span class="social-icon">📸</span>
+                  <span class="social-meta">
+                    <strong>Instagram</strong>
+                    <small>@englishwithjeronimo</small>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="sobre-body">
+            <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 24px;">
+              Oi! Eu sou o Jeronimo. Meu objetivo como professor é bem direto: tirar o medo de encarar planilhas cheias de números, fórmulas ou códigos, e mostrar como essas ferramentas podem trabalhar a seu favor no dia a dia — economizando tempo e evitando retrabalho.
+            </p>
+
+            <h3 class="section-h3">🎯 Como funcionam as nossas aulas</h3>
+            <p>
+              Ninguém aprende a dominar o Excel ou a programar só olhando outra pessoa fazer. Por isso, nossas aulas são práticas desde o primeiro minuto, divididas em três etapas simples:
+            </p>
+            <div class="concept-grid" style="margin: 20px 0;">
+              <div class="concept-card">
+                <strong>1. Fazemos juntos primeiro</strong>
+                <p>A gente abre o arquivo, entende a lógica com calma e resolve o primeiro exemplo sem pressa, tirando as dúvidas na hora.</p>
+              </div>
+              <div class="concept-card">
+                <strong>2. Você assume o controle</strong>
+                <p>Com a ideia clara, você pratica em exercícios parecidos com situações reais que aparecem em qualquer empresa ou escritório.</p>
+              </div>
+              <div class="concept-card">
+                <strong>3. Desafios para fixar</strong>
+                <p>Pequenos problemas mais abertos para você pensar na solução por conta própria e ganhar confiança de verdade.</p>
+              </div>
+            </div>
+
+            <h3 class="section-h3" style="margin-top: 28px;">💻 Por que este portal existe?</h3>
+            <p>
+              Em sala de aula o ritmo flui, mas é em casa ou no trabalho que as dúvidas costumam aparecer. Montei este espaço para você ter sempre à mão as planilhas originais de cada encontro, os resumos dos pontos principais e um glossário prático de atalhos para consultar quando precisar.
+            </p>
+
+            <div class="sobre-actions">
+              <button class="pager-btn" onclick="goHome()">← Voltar ao Início</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `;
@@ -252,7 +336,7 @@ function renderTurmaView() {
   if (activeChapterId === "boas-vindas") {
     const primeiroCaderno = liberados[0];
     contentHtml = `
-      <div class="chapter-tag">Informações da Turma • Código SENAC ${turma.codigo_senac}</div>
+      <div class="chapter-tag">Informações da Turma • Código ${turma.codigo}</div>
       <h2 class="chapter-title">👋 Bem-vindo à ${turma.nome}</h2>
       <p class="chapter-lead">
         Este é o caderno digital exclusivo da nossa turma. Sempre que avançarmos para uma nova planilha em sala de aula, ela aparecerá automaticamente no menu ao lado para você baixar e revisar!
@@ -280,62 +364,6 @@ function renderTurmaView() {
           <button class="pager-btn" onclick="openChapter('${primeiroCaderno.slug}')">Ir para o Caderno ${primeiroCaderno.codigo} →</button>
         </div>
       ` : ""}
-    `;
-  } else if (activeChapterId === "sobre-mim") {
-    const primeiroCaderno = liberados[0];
-    contentHtml = `
-      <div class="chapter-tag">Corpo Docente • SENAC</div>
-      <h2 class="chapter-title">👨‍🏫 Sobre o Professor Jerônimo Silva</h2>
-      <p class="chapter-lead">
-        Instrutor de Tecnologia, Produtividade & Inteligência Artificial, focado em capacitar profissionais para o mercado por meio do domínio analítico de dados, ferramentas corporativas e raciocínio prático.
-      </p>
-
-      <div class="concept-grid">
-        <div class="concept-card">
-          <strong>🎯 Filosofia Pedagógica</strong>
-          <p>Aulas 100% práticas estruturadas na progressão <em>Guiado → Fixação → Desafio</em>. O objetivo é desenvolver autonomia real, desmistificando fórmulas, automações e análise de dados no dia a dia.</p>
-        </div>
-        <div class="concept-card">
-          <strong>💻 Hub de Apoio Contínuo</strong>
-          <p>Este portal é mantido aula a aula para que você tenha acesso vitalício ao mesmo padrão de exercícios, planilhas oficiais e atalhos trabalhados no laboratório do Senac.</p>
-        </div>
-        <div class="concept-card">
-          <strong>🤝 Conecte-se e Tire Dúvidas</strong>
-          <p>Fique à vontade para acompanhar os projetos e interagir nas redes sociais para novas oportunidades, dúvidas e networking profissional.</p>
-        </div>
-      </div>
-
-      <h3 class="section-h3" style="margin-top: 28px;">🌐 Perfis Oficiais & Redes</h3>
-      <div class="teacher-social-grid" style="margin-bottom: 28px;">
-        <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" class="social-btn linkedin" style="padding: 14px 20px;">
-          <span class="social-icon" style="font-size: 1.5rem;">💼</span>
-          <span class="social-meta">
-            <strong style="font-size: 0.95rem;">LinkedIn</strong>
-            <small>linkedin.com/in/jeronimo-jrsilva</small>
-          </span>
-        </a>
-        <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" class="social-btn github" style="padding: 14px 20px;">
-          <span class="social-icon" style="font-size: 1.5rem;">🐙</span>
-          <span class="social-meta">
-            <strong style="font-size: 0.95rem;">GitHub</strong>
-            <small>github.com/jeronimo-jrsilva</small>
-          </span>
-        </a>
-        <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" class="social-btn instagram" style="padding: 14px 20px;">
-          <span class="social-icon" style="font-size: 1.5rem;">📸</span>
-          <span class="social-meta">
-            <strong style="font-size: 0.95rem;">Instagram</strong>
-            <small>@englishwithjeronimo</small>
-          </span>
-        </a>
-      </div>
-
-      <div class="pager-row">
-        <button class="pager-btn" onclick="openChapter('boas-vindas')">← Voltar às Boas-vindas</button>
-        ${primeiroCaderno ? `
-          <button class="pager-btn" onclick="openChapter('${primeiroCaderno.slug}')">Ir para o Caderno ${primeiroCaderno.codigo} →</button>
-        ` : `<span></span>`}
-      </div>
     `;
   } else if (activeChapterId === "atalhos") {
     const lastLib = liberados[liberados.length - 1];
@@ -434,11 +462,11 @@ function renderTurmaView() {
         <button class="nav-item ${activeChapterId === 'boas-vindas' ? 'active' : ''}" onclick="openChapter('boas-vindas')">
           👋 Boas-vindas da Turma
         </button>
-        <button class="nav-item ${activeChapterId === 'sobre-mim' ? 'active' : ''}" onclick="openChapter('sobre-mim')">
-          👨‍🏫 Sobre o Professor
-        </button>
         <button class="nav-item ${activeChapterId === 'atalhos' ? 'active' : ''}" onclick="openChapter('atalhos')">
           📚 Glossário & Atalhos
+        </button>
+        <button class="nav-item" onclick="openSobreView()">
+          👨‍🏫 Sobre o Professor
         </button>
 
         <div class="nav-section-title">Cadernos Ministrados</div>
@@ -449,11 +477,11 @@ function renderTurmaView() {
         `).join("")}
 
         <div class="sidebar-teacher-box">
-          <div class="sidebar-teacher-header" onclick="openChapter('sobre-mim')" style="cursor: pointer;" title="Conhecer o professor">
-            <div class="teacher-avatar-sm">JS</div>
+          <div class="sidebar-teacher-header" onclick="openSobreView()" style="cursor: pointer;" title="Conhecer perfil do professor">
+            <img src="assets/jeronimo_perfil.jpg" alt="Prof. Jeronimo Silva" class="teacher-avatar-sm-img" />
             <div>
-              <div class="sidebar-teacher-name">Prof. Jerônimo Silva</div>
-              <div class="sidebar-teacher-sub">Instrutor SENAC</div>
+              <div class="sidebar-teacher-name">Prof. Jeronimo Silva</div>
+              <div class="sidebar-teacher-sub">Ver perfil com foto →</div>
             </div>
           </div>
           <div class="sidebar-social-links">
@@ -504,19 +532,26 @@ function renderApp() {
       ${renderTopbar()}
       <div class="home-wrapper">
         <div class="home-container" style="text-align:center; padding-top:60px;">
-          <p style="color:#475569; font-size:1rem;">Carregando banco de dados SQLite (<code>portal_ensino.db</code>)...</p>
+          <p style="color:var(--text-muted); font-size:1rem;">Carregando banco de dados SQLite (<code>portal_ensino.db</code>)...</p>
         </div>
       </div>
     `;
     return;
   }
-  root.innerHTML = currentView === "home" ? renderHomeView() : renderTurmaView();
+  if (currentView === "home") {
+    root.innerHTML = renderHomeView();
+  } else if (currentView === "sobre") {
+    root.innerHTML = renderSobreView();
+  } else {
+    root.innerHTML = renderTurmaView();
+  }
 }
 
 // ============================================================================
 // INICIALIZAÇÃO DO BANCO SQLITE (sql.js WebAssembly + portal_ensino.db)
 // ============================================================================
 async function bootSqlitePortal() {
+  applyTheme(currentTheme);
   renderApp();
   try {
     const SQL = await initSqlJs({
