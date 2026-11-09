@@ -579,3 +579,36 @@ async function bootSqlitePortal() {
 window.addEventListener("DOMContentLoaded", () => {
   bootSqlitePortal();
 });
+
+// Header inteligente: esconde automaticamente ao rolar para baixo, reaparece ao rolar para cima
+let lastScrollY = window.scrollY;
+let isTopbarHidden = false;
+
+window.addEventListener("scroll", () => {
+  const currentScrollY = window.scrollY;
+  const topbar = document.querySelector(".topbar");
+  if (!topbar) return;
+
+  // No topo da página, sempre mantém visível
+  if (currentScrollY <= 50) {
+    if (isTopbarHidden) {
+      topbar.classList.remove("topbar-hidden");
+      isTopbarHidden = false;
+    }
+    lastScrollY = currentScrollY;
+    return;
+  }
+
+  // Rola para baixo mais de 8px -> Esconde para liberar 100% da tela no celular/desktop
+  if (currentScrollY > lastScrollY + 8 && !isTopbarHidden) {
+    topbar.classList.add("topbar-hidden");
+    isTopbarHidden = true;
+  } 
+  // Rola para cima mais de 8px -> Reaparece suavemente para navegação
+  else if (currentScrollY < lastScrollY - 8 && isTopbarHidden) {
+    topbar.classList.remove("topbar-hidden");
+    isTopbarHidden = false;
+  }
+
+  lastScrollY = currentScrollY;
+}, { passive: true });

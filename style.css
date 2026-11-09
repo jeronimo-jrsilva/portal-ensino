@@ -72,6 +72,13 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  will-change: transform;
+}
+
+.topbar.topbar-hidden {
+  transform: translateY(-100%);
+  box-shadow: none;
 }
 
 .brand {
@@ -1073,6 +1080,44 @@ body.dark-theme .badge-em-breve {
 }
 
 @media (max-width: 768px) {
+  .topbar {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .brand-logo,
+  .brand-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  .brand-text h1,
+  .brand-title h1 {
+    font-size: 0.92rem;
+  }
+
+  .brand-text span,
+  .brand-title p {
+    display: none; /* Oculta subtítulo longo no celular para economizar altura */
+  }
+
+  .topbar-actions {
+    gap: 6px;
+  }
+
+  .topbar-btn,
+  .btn-back-home {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    border-radius: 7px;
+  }
+
   .teacher-card-main {
     flex-direction: column;
     align-items: center;
