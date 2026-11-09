@@ -612,3 +612,237 @@ kbd.light-kbd {
   border-color: var(--excel-green);
 }
 
+/* --------------------------------------------------------------------------
+   SEÇÃO: SOBRE O PROFESSOR & LINKS SOCIAIS (HOME E TURMA)
+   -------------------------------------------------------------------------- */
+.home-teacher-section {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px dashed var(--border-light);
+}
+
+.teacher-card-main {
+  background: var(--card-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+}
+
+.teacher-card-main:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #cbd5e1;
+}
+
+.teacher-avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--navy-primary) 0%, #2563eb 100%);
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.25);
+}
+
+.teacher-content {
+  flex: 1;
+}
+
+.teacher-tag {
+  display: inline-block;
+  background: var(--excel-green-light);
+  color: var(--excel-green);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.teacher-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.teacher-headline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--navy-primary);
+  margin-bottom: 12px;
+}
+
+.teacher-bio {
+  font-size: 0.92rem;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.teacher-social-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1px solid var(--border-light);
+  background: var(--bg-page);
+  color: var(--text-dark);
+  transition: all 0.2s ease;
+}
+
+.social-btn .social-icon {
+  font-size: 1.15rem;
+}
+
+.social-btn .social-meta {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.social-btn .social-meta strong {
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.social-btn .social-meta small {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.social-btn.linkedin:hover {
+  background: #0077b5;
+  color: #fff;
+  border-color: #0077b5;
+}
+.social-btn.linkedin:hover small {
+  color: #e0f2fe;
+}
+
+.social-btn.github:hover {
+  background: #24292f;
+  color: #fff;
+  border-color: #24292f;
+}
+.social-btn.github:hover small {
+  color: #cbd5e1;
+}
+
+.social-btn.instagram:hover {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: #fff;
+  border-color: transparent;
+}
+.social-btn.instagram:hover small {
+  color: #ffe4e6;
+}
+
+/* Sidebar teacher box */
+.sidebar-teacher-box {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border-light);
+}
+
+.sidebar-teacher-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.teacher-avatar-sm {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--navy-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-teacher-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+.sidebar-teacher-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.sidebar-social-links {
+  display: flex;
+  gap: 8px;
+}
+
+.sidebar-social-links a {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+  background: var(--card-white);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.sidebar-social-links a:hover {
+  border-color: var(--navy-primary);
+  background: var(--navy-light);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .teacher-card-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .teacher-social-grid {
+    justify-content: center;
+  }
+  .teacher-social-grid .social-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+

@@ -155,6 +155,50 @@ function renderTopbar() {
   `;
 }
 
+// COMPONENTE: SEÇÃO SOBRE O PROFESSOR (BIOGRAFIA & REDES)
+function renderTeacherSection() {
+  return `
+    <section class="home-teacher-section">
+      <div class="teacher-card-main">
+        <div class="teacher-avatar-lg">JS</div>
+        <div class="teacher-content">
+          <span class="teacher-tag">Corpo Docente • SENAC</span>
+          <h3 class="teacher-name">Prof. Jerônimo Silva</h3>
+          <p class="teacher-headline">Instrutor de Tecnologia, Produtividade & IA</p>
+          <p class="teacher-bio">
+            Apaixonado por simplificar rotinas através de planilhas inteligentes, automação e raciocínio lógico. 
+            Criei este portal unificado para reunir todos os materiais oficiais, planilhas guiadas e glossários das nossas aulas, 
+            garantindo suporte contínuo durante e após o curso. Siga nas redes e conecte-se:
+          </p>
+          <div class="teacher-social-grid">
+            <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" class="social-btn linkedin">
+              <span class="social-icon">💼</span>
+              <span class="social-meta">
+                <strong>LinkedIn</strong>
+                <small>/in/jeronimo-jrsilva</small>
+              </span>
+            </a>
+            <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" class="social-btn github">
+              <span class="social-icon">🐙</span>
+              <span class="social-meta">
+                <strong>GitHub</strong>
+                <small>@jeronimo-jrsilva</small>
+              </span>
+            </a>
+            <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" class="social-btn instagram">
+              <span class="social-icon">📸</span>
+              <span class="social-meta">
+                <strong>Instagram</strong>
+                <small>@englishwithjeronimo</small>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 // TELA 1: RECEPÇÃO POR MODALIDADES E CÓDIGOS DE TURMA (LIDA DO SQLITE)
 function renderHomeView() {
   const areas = getModalidadesComTurmas();
@@ -191,6 +235,8 @@ function renderHomeView() {
             </div>
           `).join("")}
         </div>
+
+        ${renderTeacherSection()}
       </div>
     </div>
   `;
@@ -234,6 +280,62 @@ function renderTurmaView() {
           <button class="pager-btn" onclick="openChapter('${primeiroCaderno.slug}')">Ir para o Caderno ${primeiroCaderno.codigo} →</button>
         </div>
       ` : ""}
+    `;
+  } else if (activeChapterId === "sobre-mim") {
+    const primeiroCaderno = liberados[0];
+    contentHtml = `
+      <div class="chapter-tag">Corpo Docente • SENAC</div>
+      <h2 class="chapter-title">👨‍🏫 Sobre o Professor Jerônimo Silva</h2>
+      <p class="chapter-lead">
+        Instrutor de Tecnologia, Produtividade & Inteligência Artificial, focado em capacitar profissionais para o mercado por meio do domínio analítico de dados, ferramentas corporativas e raciocínio prático.
+      </p>
+
+      <div class="concept-grid">
+        <div class="concept-card">
+          <strong>🎯 Filosofia Pedagógica</strong>
+          <p>Aulas 100% práticas estruturadas na progressão <em>Guiado → Fixação → Desafio</em>. O objetivo é desenvolver autonomia real, desmistificando fórmulas, automações e análise de dados no dia a dia.</p>
+        </div>
+        <div class="concept-card">
+          <strong>💻 Hub de Apoio Contínuo</strong>
+          <p>Este portal é mantido aula a aula para que você tenha acesso vitalício ao mesmo padrão de exercícios, planilhas oficiais e atalhos trabalhados no laboratório do Senac.</p>
+        </div>
+        <div class="concept-card">
+          <strong>🤝 Conecte-se e Tire Dúvidas</strong>
+          <p>Fique à vontade para acompanhar os projetos e interagir nas redes sociais para novas oportunidades, dúvidas e networking profissional.</p>
+        </div>
+      </div>
+
+      <h3 class="section-h3" style="margin-top: 28px;">🌐 Perfis Oficiais & Redes</h3>
+      <div class="teacher-social-grid" style="margin-bottom: 28px;">
+        <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" class="social-btn linkedin" style="padding: 14px 20px;">
+          <span class="social-icon" style="font-size: 1.5rem;">💼</span>
+          <span class="social-meta">
+            <strong style="font-size: 0.95rem;">LinkedIn</strong>
+            <small>linkedin.com/in/jeronimo-jrsilva</small>
+          </span>
+        </a>
+        <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" class="social-btn github" style="padding: 14px 20px;">
+          <span class="social-icon" style="font-size: 1.5rem;">🐙</span>
+          <span class="social-meta">
+            <strong style="font-size: 0.95rem;">GitHub</strong>
+            <small>github.com/jeronimo-jrsilva</small>
+          </span>
+        </a>
+        <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" class="social-btn instagram" style="padding: 14px 20px;">
+          <span class="social-icon" style="font-size: 1.5rem;">📸</span>
+          <span class="social-meta">
+            <strong style="font-size: 0.95rem;">Instagram</strong>
+            <small>@englishwithjeronimo</small>
+          </span>
+        </a>
+      </div>
+
+      <div class="pager-row">
+        <button class="pager-btn" onclick="openChapter('boas-vindas')">← Voltar às Boas-vindas</button>
+        ${primeiroCaderno ? `
+          <button class="pager-btn" onclick="openChapter('${primeiroCaderno.slug}')">Ir para o Caderno ${primeiroCaderno.codigo} →</button>
+        ` : `<span></span>`}
+      </div>
     `;
   } else if (activeChapterId === "atalhos") {
     const lastLib = liberados[liberados.length - 1];
@@ -332,6 +434,9 @@ function renderTurmaView() {
         <button class="nav-item ${activeChapterId === 'boas-vindas' ? 'active' : ''}" onclick="openChapter('boas-vindas')">
           👋 Boas-vindas da Turma
         </button>
+        <button class="nav-item ${activeChapterId === 'sobre-mim' ? 'active' : ''}" onclick="openChapter('sobre-mim')">
+          👨‍🏫 Sobre o Professor
+        </button>
         <button class="nav-item ${activeChapterId === 'atalhos' ? 'active' : ''}" onclick="openChapter('atalhos')">
           📚 Glossário & Atalhos
         </button>
@@ -342,6 +447,21 @@ function renderTurmaView() {
             📗 Caderno ${c.codigo}: ${c.titulo.split(',')[0]}
           </button>
         `).join("")}
+
+        <div class="sidebar-teacher-box">
+          <div class="sidebar-teacher-header" onclick="openChapter('sobre-mim')" style="cursor: pointer;" title="Conhecer o professor">
+            <div class="teacher-avatar-sm">JS</div>
+            <div>
+              <div class="sidebar-teacher-name">Prof. Jerônimo Silva</div>
+              <div class="sidebar-teacher-sub">Instrutor SENAC</div>
+            </div>
+          </div>
+          <div class="sidebar-social-links">
+            <a href="https://www.linkedin.com/in/jeronimo-jrsilva/" target="_blank" rel="noopener noreferrer" title="LinkedIn">💼</a>
+            <a href="https://github.com/jeronimo-jrsilva" target="_blank" rel="noopener noreferrer" title="GitHub">🐙</a>
+            <a href="https://instagram.com/englishwithjeronimo" target="_blank" rel="noopener noreferrer" title="Instagram">📸</a>
+          </div>
+        </div>
       </aside>
 
       <main class="content-area">
