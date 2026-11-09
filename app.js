@@ -217,15 +217,10 @@ function renderHomeView() {
                 </div>
                 <div>
                   ${hasTurmas ? `
-                    <span class="turmas-group-label">Turmas disponíveis:</span>
-                    <div class="turmas-list">
-                      ${area.turmas.map(t => `
-                        <button class="btn-turma active-turma" onclick="openTurma('${t.slug}')">
-                          <span>${t.nome}</span>
-                          <span>Entrar →</span>
-                        </button>
-                      `).join("")}
-                    </div>
+                    <button class="btn-entrar" onclick="openTurma('${area.turmas[0].slug}')">
+                      <span>Entrar</span>
+                      <span>→</span>
+                    </button>
                   ` : `
                     <div class="em-breve-container">
                       <span class="badge-em-breve">Em breve</span>
@@ -336,10 +331,10 @@ function renderTurmaView() {
   if (activeChapterId === "boas-vindas") {
     const primeiroCaderno = liberados[0];
     contentHtml = `
-      <div class="chapter-tag">Informações da Turma • Código ${turma.codigo}</div>
-      <h2 class="chapter-title">👋 Bem-vindo à ${turma.nome}</h2>
+      <div class="chapter-tag">Caderno Digital • ${turma.modalidade_titulo}</div>
+      <h2 class="chapter-title">👋 Bem-vindo ao material de ${turma.modalidade_titulo}</h2>
       <p class="chapter-lead">
-        Este é o caderno digital exclusivo da nossa turma. Sempre que avançarmos para uma nova planilha em sala de aula, ela aparecerá automaticamente no menu ao lado para você baixar e revisar!
+        Este é o caderno digital do nosso curso. Sempre que avançarmos para uma nova planilha em sala de aula, ela aparecerá automaticamente no menu ao lado para você baixar e revisar!
       </p>
 
       <h3 class="section-h3">Como aproveitar melhor este material?</h3>
@@ -454,13 +449,13 @@ function renderTurmaView() {
     <div class="classroom-layout">
       <aside class="sidebar">
         <div class="turma-badge-box">
-          <span>Turma Selecionada</span>
-          <strong>${turma.modalidade_icone} ${turma.nome}</strong>
+          <span>Curso Selecionado</span>
+          <strong>${turma.modalidade_icone} ${turma.modalidade_titulo}</strong>
         </div>
 
         <div class="nav-section-title">Orientações & Consulta</div>
         <button class="nav-item ${activeChapterId === 'boas-vindas' ? 'active' : ''}" onclick="openChapter('boas-vindas')">
-          👋 Boas-vindas da Turma
+          👋 Boas-vindas
         </button>
         <button class="nav-item ${activeChapterId === 'atalhos' ? 'active' : ''}" onclick="openChapter('atalhos')">
           📚 Glossário & Atalhos
