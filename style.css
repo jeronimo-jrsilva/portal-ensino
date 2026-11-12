@@ -506,6 +506,31 @@ body.dark-theme .btn-entrar:hover {
   transform: translateY(-1px);
 }
 
+.download-banner-extra {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  border: 1px solid #c4b5fd;
+  margin-top: -16px;
+  margin-bottom: 32px;
+}
+
+.download-banner-extra h4 {
+  color: #5b21b6;
+}
+
+.download-banner-extra p {
+  color: #6d28d9;
+}
+
+.btn-dl-extra {
+  background: #6d28d9;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+}
+
+.btn-dl-extra:hover {
+  background: #5b21b6;
+  transform: translateY(-1px);
+}
+
 .section-h3 {
   font-size: 1.22rem;
   color: var(--text-dark);
@@ -1034,6 +1059,19 @@ body.dark-theme .profile-photo {
 body.dark-theme .download-banner {
   background: linear-gradient(135deg, rgba(6, 78, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
   border-color: #065f46;
+}
+
+body.dark-theme .download-banner-extra {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(15, 23, 42, 0.7) 100%);
+  border-color: #6d28d9;
+}
+
+body.dark-theme .download-banner-extra h4 {
+  color: #c4b5fd;
+}
+
+body.dark-theme .download-banner-extra p {
+  color: #ddd6fe;
 }
 
 body.dark-theme .download-banner h4 {

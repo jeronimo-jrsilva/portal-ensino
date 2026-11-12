@@ -79,7 +79,7 @@ function getTurmaBySlug(slug) {
 
 function getCadernosLiberadosDaTurma(turmaId) {
   return queryAll(`
-    SELECT c.id, c.codigo, c.slug, c.encontro, c.titulo, c.subtitulo, c.arquivo_xlsx, c.dica_ouro
+    SELECT c.id, c.codigo, c.slug, c.encontro, c.titulo, c.subtitulo, c.arquivo_xlsx, c.arquivo_extras_xlsx, c.dica_ouro
     FROM cadernos c
     INNER JOIN turma_cadernos tc ON tc.caderno_id = c.id
     WHERE tc.turma_id = ? AND tc.liberado = 1
@@ -409,6 +409,16 @@ function renderTurmaView() {
         </div>
         <a class="btn-dl" href="${cad.arquivo_xlsx}" download>📥 Baixar Planilha ${cad.codigo} (.xlsx)</a>
       </div>
+
+      ${cad.arquivo_extras_xlsx ? `
+      <div class="download-banner download-banner-extra">
+        <div>
+          <h4>⚡ Exercícios Extras / Prática Autônoma (.xlsx)</h4>
+          <p>Bateria complementar de alta densidade (250 linhas em 5 estudos de caso corporativos para aprofundamento e prática de fim de semana).</p>
+        </div>
+        <a class="btn-dl btn-dl-extra" href="${cad.arquivo_extras_xlsx}" download>📥 Baixar Exercícios Extras ${cad.codigo} (.xlsx)</a>
+      </div>
+      ` : ''}
 
       <h3 class="section-h3">🎯 Resumo dos Pontos-Chave desta Planilha</h3>
       <div class="concept-grid">
