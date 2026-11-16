@@ -431,7 +431,7 @@ function renderTurmaView() {
       </div>
 
       <div class="callout-tip">
-        <strong>💡 Dica de Ouro vista em Sala:</strong> ${cad.dica_ouro}
+        <strong>💡 Dica:</strong> ${cad.dica_ouro}
       </div>
 
       <h3 class="section-h3">📑 O que praticamos em cada aba da planilha (Clique para expandir)</h3>
