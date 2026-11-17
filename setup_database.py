@@ -249,7 +249,7 @@ def build_database():
             "codigo": "05",
             "slug": "caderno-05",
             "encontro": "Caderno 05 • Travamento e Diagnóstico",
-            "titulo": "Referência Absoluta ($) e Auditoria dos 5 Erros",
+            "titulo": "Referência Absoluta",
             "subtitulo": "Como travar células com o cifrão ($F$4), calcular impostos de Nota Fiscal, participação % no total e corrigir erros de fórmula.",
             "arquivo": "downloads/excel/05_Referencia_Absoluta_e_Auditoria_de_Erros.xlsx",
             "liberado": 0,
@@ -261,11 +261,11 @@ def build_database():
                 ("🩺 Os 5 Erros do Excel", "#NOME? (nome de função digitado errado), #VALOR! (conta matemática com texto), #DIV/0! (divisão por zero/vazio), #REF! (célula apagada) e #NÚM!.")
             ],
             "abas": [
-                ("05.1 — O Problema do Escorregamento", "Diagnóstico visual do erro ao arrastar sem $ e travamento com F4 em câmbio e tabela de descontos."),
-                ("05.2 — Nota Fiscal e Impostos", "Cálculo de CSLL (4,8%), PIS (0,65%), COFINS (3,0%) e Valor Líquido da NF com alíquotas fixas."),
-                ("05.3 — Participação % e Ref. Mista", "Cálculo de % Share sobre o total geral travado e matriz cruzada com referência mista ($A4 e B$3)."),
-                ("05.4 — Clínica dos 5 Erros", "Diagnóstico e conserto prático de #NOME?, #VALOR!, #DIV/0!, #REF! e #NÚM!."),
-                ("05.5 — Desafio de Consolidação", "3 exercícios de 20 linhas com travamento de células e auditoria.")
+                ("05.1 — Trava F4 e Impostos de NF", "Referência relativa vs. absoluta ($F$4), conversão de dólar e cálculo de CSLL, PIS e COFINS na Nota Fiscal."),
+                ("05.2 — Participação % e Ref. Mista", "Cálculo de % Share sobre o total geral travado e matrizes cruzadas com referência mista ($Coluna e Linha$)."),
+                ("05.3 — Auditoria dos 5 Erros", "Diagnóstico e conserto prático de #NOME?, #VALOR!, #DIV/0!, #REF! e #NÚM!."),
+                ("05.4 — Simulador de Precificação", "Simuladores financeiros paramétricos (Importação, PIX vs. Cartão, Obras/BDI, Frota e DRE com CMV)."),
+                ("05.5 — Desafio de Consolidação", "3 exercícios corporativos de 20 linhas integrando travamento F4, referência mista e auditoria.")
             ]
         },
         {
