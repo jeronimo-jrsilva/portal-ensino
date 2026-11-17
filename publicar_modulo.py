@@ -44,7 +44,7 @@ def set_module_state(codigo_turma: str, codigo_caderno: str, liberar: bool):
         return
 
     caderno = cur.execute(
-        "SELECT id, codigo, titulo, arquivo_xlsx FROM cadernos WHERE codigo = ?;",
+        "SELECT id, codigo, titulo, arquivo_xlsx, arquivo_extras_xlsx FROM cadernos WHERE codigo = ?;",
         (cod_cad,)
     ).fetchone()
     if not caderno:
@@ -57,6 +57,10 @@ def set_module_state(codigo_turma: str, codigo_caderno: str, liberar: bool):
     dst_path = os.path.join(PORTAL_DIR, caderno["arquivo_xlsx"])
     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
 
+    extra_rel = caderno["arquivo_extras_xlsx"]
+    extra_src = os.path.join(SRC_EXCEL_DIR, os.path.basename(extra_rel)) if extra_rel else None
+    extra_dst = os.path.join(PORTAL_DIR, extra_rel) if extra_rel else None
+
     if liberar:
         if not os.path.exists(src_path):
             print(f"[ERRO] Planilha oficial não encontrada em: {src_path}")
@@ -64,10 +68,16 @@ def set_module_state(codigo_turma: str, codigo_caderno: str, liberar: bool):
             return
         shutil.copy2(src_path, dst_path)
         print(f"[ARQUIVO] Planilha copiada para pasta pública: {dst_path}")
+        if extra_src and os.path.exists(extra_src):
+            shutil.copy2(extra_src, extra_dst)
+            print(f"[ARQUIVO] Planilha extra copiada para pasta pública: {extra_dst}")
     else:
         if os.path.exists(dst_path):
             os.remove(dst_path)
             print(f"[ARQUIVO] Planilha removida da pasta pública: {dst_path}")
+        if extra_dst and os.path.exists(extra_dst):
+            os.remove(extra_dst)
+            print(f"[ARQUIVO] Planilha extra removida da pasta pública: {extra_dst}")
 
     novo_estado = 1 if liberar else 0
     cur.execute("""
